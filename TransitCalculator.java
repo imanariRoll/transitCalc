@@ -8,29 +8,60 @@ public class TransitCalculator {
     double pricePerWeek = 33.00;
     double priceUnlimited = 127.00;
     double perRide = 0.00;
+    double unlimited = 0.00;
+
+    boolean disable = false;
+    int passAge = 0;
 
 
-    public TransitCalculator(double days, double rides){
+    public TransitCalculator(double days, double rides, boolean disability, int age){
     numberOfDays = days;
     numberOfRides = rides;
+    disable = disability;
+    passAge = age;
 
-
-    }
-
-    public double unlimited7Price(){
-        double numOfWeeks = Math.ceil(numberOfDays/7) ; // Math.ceil will return the largest integer that is divisble without a remainder //
-        double totalPrice = numOfWeeks * pricePerWeek;
-        return totalPrice / numberOfRides;
 
 
     }
 
-    public double[] getRidePrices(){ // 28/06/2020 Sunday. Math is verified.
-        double perRide = pricePerRide * numberOfRides / numberOfDays;
+    public double unlimited7Price() {
+
+
+        if (passAge >= 65 || disable == true) {
+            double numOfWeeks = Math.ceil(numberOfDays / 7);
+            double totalPrice = numOfWeeks * (pricePerWeek / 2);
+            return totalPrice / numberOfRides;
+        } else {
+
+            double numOfWeeks = Math.ceil(numberOfDays / 7); // Math.ceil will return the largest integer that is divisble without a remainder //
+            double totalPrice = numOfWeeks * pricePerWeek;
+            return totalPrice / numberOfRides;
+
+        }
+    }
+
+        public double[] getRidePrices() { // 28/06/2020 Sunday. Math is verified.
+
+            if(disable == true || passAge >= 65){
+                 perRide = (pricePerRide-1.4) * numberOfRides / numberOfDays;
+            }
+            else {
+                perRide = pricePerRide * numberOfRides / numberOfDays;
+            }
+
         double perWeek = unlimited7Price();
-        double unlimited = priceUnlimited / numberOfRides;
+
+            if(disable == true || passAge >= 65){
+                unlimited = (priceUnlimited/2) / numberOfRides;
+            }
+            else{
+
+                unlimited = priceUnlimited / numberOfRides;
+            }
+
+
         double ridePrices[]; // Declared Array //
-        ridePrices = new double[] {perRide, perWeek, unlimited}; // New array, with added elements. Could be a mistake since I failed to declare elements//
+        ridePrices = new double[] {perRide, perWeek, unlimited};
 
         return ridePrices;
         }
@@ -67,7 +98,7 @@ public class TransitCalculator {
     }
 
     public static void main(String[] args){
-        TransitCalculator test = new TransitCalculator(5, 12);
+        TransitCalculator test = new TransitCalculator(26, 54, false, 20);
 
         System.out.println(test.getBestFare()); //
 
